@@ -6,6 +6,7 @@ const getAllWorkouts = async (req, res) => {
     const workouts = await Workout.find().sort({ createdAt: -1 })
     res.status(200).json(workouts)
   } catch (err) {
+    console.log('err: ', err);
     res.status(400).json({ error: err.message })
   }
 }
