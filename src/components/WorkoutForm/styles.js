@@ -4,7 +4,8 @@ export const Container = styled.div`
   width: 90%;
   padding: 1rem;
   border-radius: 0.5rem;
-  background: #fff
+  background: #fff;
+  height: fit-content;
 `
 
 export const Form = styled.form`
@@ -25,4 +26,12 @@ export const Input = styled.input`
   border-radius: 0.5rem;
   border: 1px solid #d2d2da;
   margin-bottom: 1rem;
+`
+export const AddButton = styled.button`
+  padding: 1rem 2rem;
+  border-radius: 0.5rem;
+  background-color: #1aac83;
+  border-color: #1aac83;
+  color: #fff;
+  border: 0;
 `

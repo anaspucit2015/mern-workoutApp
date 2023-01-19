@@ -5,6 +5,7 @@ export const Card = styled.div`
   border-radius: 0.5rem;
   background: #fff;
   height: fit-content;
+  position: relative;
 `
 export const Title = styled.h2`
   text-align: center;
@@ -26,4 +27,19 @@ export const Value = styled.div`
   flex: 0 0 50%;
   text-align: center;
   border-left: 1px solid #d2d2da;
+`
+export const Delete = styled.div`
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  background-color: #ff0000;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  cursor: pointer;
 `
