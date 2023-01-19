@@ -10,18 +10,17 @@ const Home = () => {
   const { workouts, dispatch } = useWorkoutsContext()
 
   useEffect(() => {
+    const fetchWorkouts = async () => {
+      await fetch(`${process.env.REACT_APP_BACKEND_APP_URL}/api/workouts`)
+        .then(res => res.json())
+        .then(data => dispatch({ type: 'SET_WORKOUTS', payload: data }))
+        .catch(err => {
+          toast.error('Something went wrong')
+          console.log('err: ', err)
+        })
+    }
     fetchWorkouts()
-  }, [])
-
-  const fetchWorkouts = async () => {
-    await fetch('http://localhost:4000/api/workouts')
-      .then(res => res.json())
-      .then(data => dispatch({ type: 'SET_WORKOUTS', payload: data }))
-      .catch(err => {
-        toast.error('Something went wrong')
-        console.log('err: ', err)
-      })
-  }
+  }, [dispatch])
 
   const handleValueChange = (key, value) => {
     setFormData({ ...formData, [key]: value })
@@ -30,13 +29,16 @@ const Home = () => {
   const handleSubmit = async e => {
     e.preventDefault()
     try {
-      const res = await fetch('http://localhost:4000/api/workouts', {
-        method: 'POST',
-        body: JSON.stringify(formData),
-        headers: {
-          'Content-Type': 'application/json'
+      const res = await fetch(
+        `${process.env.REACT_APP_BACKEND_APP_URL}/api/workouts`,
+        {
+          method: 'POST',
+          body: JSON.stringify(formData),
+          headers: {
+            'Content-Type': 'application/json'
+          }
         }
-      }).then(res => res.json())
+      ).then(res => res.json())
       if (res.error) {
         throw res.error
       }
@@ -47,12 +49,32 @@ const Home = () => {
       toast.error(err)
     }
   }
+  const handleDelete = async id => {
+    try {
+      const res = await fetch(
+        `${process.env.REACT_APP_BACKEND_APP_URL}/api/workouts/${id}`,
+        {
+          method: 'DELETE'
+        }
+      ).then(res => res.json())
+      if (res._id) {
+        dispatch({ type: 'DELETE_WORKOUT', payload: res })
+        toast.success(`${res.title} is Deleted Successfully.`)
+      }
+    } catch (err) {
+      toast.error(err)
+    }
+  }
   return (
     <Container>
       <CardContainer>
         {workouts &&
           workouts.map(workout => (
-            <WorkoutDetails key={workout._id} workout={workout} />
+            <WorkoutDetails
+              key={workout._id}
+              workout={workout}
+              handleDelete={handleDelete}
+            />
           ))}
       </CardContainer>
       <WorkoutForm
