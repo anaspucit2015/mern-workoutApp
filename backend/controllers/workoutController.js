@@ -3,10 +3,12 @@ const mongoose = require('mongoose')
 
 const getAllWorkouts = async (req, res) => {
   try {
-    const workouts = await Workout.find().sort({ createdAt: -1 })
+    const {
+      user: { _id }
+    } = req
+    const workouts = await Workout.find({ user: _id }).sort({ createdAt: -1 })
     res.status(200).json(workouts)
   } catch (err) {
-    console.log('err: ', err);
     res.status(400).json({ error: err.message })
   }
 }
@@ -33,15 +35,20 @@ const getWorkout = async (req, res) => {
 const createWorkout = async (req, res) => {
   const { title, reps, load } = req.body
   let emptyFields = []
-  if(!title) emptyFields.push('title')
-  if(!reps) emptyFields.push('reps')
-  if(!load) emptyFields.push('load')
+  if (!title) emptyFields.push('title')
+  if (!reps) emptyFields.push('reps')
+  if (!load) emptyFields.push('load')
 
-  if(emptyFields.length > 0){
-    res.status(400).json({ error: 'Please Fill in all the Fields', emptyFields})
+  if (emptyFields.length > 0) {
+    res
+      .status(400)
+      .json({ error: 'Please Fill in all the Fields', emptyFields })
   }
   try {
-    const workout = await Workout.create({ title, reps, load })
+    const {
+      user: { _id }
+    } = req
+    const workout = await Workout.create({ title, reps, load, user: _id })
     res.status(200).json(workout)
   } catch (err) {
     res.status(400).json({ error: err.message })

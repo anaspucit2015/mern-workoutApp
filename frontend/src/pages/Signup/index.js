@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
 import SignupForm from '../../components/SignupForm'
-import { toast } from 'react-toastify'
-import { useAuthContext } from '../../hooks/useAuthContext'
+import { useSignup } from '../../hooks/useSignup'
 
 const Signup = () => {
   const [formData, setFormData] = useState({ email: '', password: '' })
-  const { dispatch } = useAuthContext()
+  const { signup, isloading } = useSignup()
 
   const handleValueChange = (key, value) => {
     setFormData({ ...formData, [key]: value })
@@ -13,33 +12,17 @@ const Signup = () => {
 
   const handleSubmit = async e => {
     e.preventDefault()
-    try {
-      const res = await fetch(
-        `${process.env.REACT_APP_BACKEND_APP_URL}/api/user/signup`,
-        {
-          method: 'POST',
-          body: JSON.stringify(formData),
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
-      ).then(res => res.json())
-      if (res.error) {
-        throw res.error
-      }
-      toast.success('Workout added')
-      setFormData({ title: '', reps: 0, load: 0 })
-      dispatch({ type: 'SIGNUP', payload: res })
-    } catch (err) {
-      toast.error(err)
-    }
+    await signup(formData, clearForm)
   }
-
+  const clearForm = () => {
+    setFormData({ email: '', password: '' })
+  }
   return (
     <SignupForm
       formData={formData}
       handleSubmit={handleSubmit}
       handleValueChange={handleValueChange}
+      loading={isloading}
     />
   )
 }

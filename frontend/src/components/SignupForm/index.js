@@ -1,7 +1,13 @@
 import React from 'react'
 import { Container, Title, Label, Input, AddButton, Form } from './styles'
 
-const SignupForm = ({ isLogin, formData, handleSubmit, handleValueChange }) => {
+const SignupForm = ({
+  isLogin,
+  formData,
+  handleSubmit,
+  handleValueChange,
+  loading
+}) => {
   const { email, password } = formData
   return (
     <Container>
@@ -27,7 +33,9 @@ const SignupForm = ({ isLogin, formData, handleSubmit, handleValueChange }) => {
             handleValueChange(name, value)
           }
         />
-        <AddButton type='submit'>{isLogin ? 'Log in' : 'Sign up'}</AddButton>
+        <AddButton disabled={loading} type='submit'>
+          {isLogin ? 'Log in' : 'Sign up'}
+        </AddButton>
       </Form>
     </Container>
   )
